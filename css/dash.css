@@ -90,7 +90,7 @@ body {
 .onePrice {
     float: left;
     width: 10%;
-    margin-right: 5%;
+    margin-right: 2%;
 }
 
 .plusMinus {
@@ -119,5 +119,49 @@ body {
     box-sizing: border-box;
     border: 1px solid #b9b9b9;
     font-size: 1em;
+    text-align: center;
+}
+.popUpblack_overlay{
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 1001;
+    -moz-opacity: 0.8;
+    opacity: .76;
+    filter: alpha(opacity=70);
+}
+.popUpwhite_content {
+  display: none;
+  position: absolute;
+  top: 35%;
+  left: 35%;
+  width: 35%;
+  height: 35%;
+  padding: 16px;
+  border: 5px black solid ;
+  background-color: #e5e5e5;
+  z-index: 1002;
+  overflow: auto;
+}
+.titlePopUP{
+    color:black;
+    font-weight: 600;
+    font-size: 3em;
+    text-align: center;
+}
+.subtitlePopUP{
+    color:black;
+    font-size: 1.5em;
+    padding: 15px 15px 15px 15px;
+    text-align: center;
+}
+.numPopUP{
+    color:black;
+    font-size: 4em;
+    padding: 15px 15px 15px 15px;
     text-align: center;
 }

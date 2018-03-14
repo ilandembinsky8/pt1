@@ -1,0 +1,18 @@
+{
+    "event":{ 
+            "eventName":"כרטיס כניסה לאירוע א",
+            "price":"10"
+    },
+    "catalogs":[{
+        "catalogName":"רכישת קטלוג א",
+        "price":"20"
+    },
+    {
+        "catalogName":"רכישת קטלוג ב",
+        "price":"10"
+    },
+    {
+        "catalogName":"רכישת קטלוג ג",
+        "price":"10"
+    }]
+}

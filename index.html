@@ -3,6 +3,117 @@
 <head>
     <title>פתח תקווה</title>
     <link rel="stylesheet" type="text/css" href="css/dash.css">
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/functionEvents.js"></script>
+    <script src="js/kioskprinterApi.js"></script>
+    <script src="js/paylinkAPI.js"></script>
+
+
+    <script>
+    $(document).ready(function(){
+        setTimeout(() => {
+            location.href='index.html'
+        }, 250000);   
+        $.getJSON('data/data.json', function(response){
+
+        $("#text1").html("כרטיס רגיל");
+        $("#text2").html("כרטיס מוזל");
+        $("#text3").html("כרטיס ללא תשלום");
+        $("#text4").html(response.event.eventName);
+        $("#text5").html(response.catalogs[0].catalogName);
+        $("#text6").html(response.catalogs[1].catalogName);
+        $("#text7").html(response.catalogs[2].catalogName);
+        $("#a41").html(response.event.price+" &#8362");
+        $("#a51").html(response.catalogs[0].price+" &#8362");
+        $("#a61").html(response.catalogs[1].price+" &#8362");
+        $("#a71").html(response.catalogs[2].price+" &#8362");
+
+
+        });
+        calculate();
+setInterval(function(){ 
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost/exampleService/getcash/',
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+            // data: myObject,                
+                success: function (cash) {
+                    $("#number").html(parseFloat($("#totall").html())-cash);
+                    getRemainder(parseFloat($("#totall").html()),cash);
+                    /*$("#number").html(parseFloat($("#totall").html())-cash);
+                    if(parseInt($('#number').html())<0){
+                        document.getElementById('light').style.display='none';
+                        document.getElementById('fade').style.display='none';
+                        getRemainder(parseFloat($("#totall").html()),cash);
+                    }else if (parseInt($('#number').html())==0) {
+                        document.getElementById('light').style.display='none';
+                        document.getElementById('fade').style.display='none';
+                        printorders(localStorage.getItem("cards"));
+                        */
+             }
+                 
+        
+});   
+},1000);
+    });
+    $(document).on('click','#payment',function(){
+       
+        startPaylink();
+        var cards = [];
+      //  $("#number").html($("#totall").html());
+        for (var index = 1; index < 8; index++) {
+           totall +=parseInt($("#a"+index+3).html()) * parseFloat($("#a"+index+1).html());
+           if(parseInt($("#a"+index+3).html())!=0){
+            var card = {
+            "name" : $("#text"+index).html(),
+            "count" : parseInt($("#a"+index+3).html()),
+            "price": parseFloat($("#a"+index+1).html())
+             };  
+             cards.push(card);
+           }
+           
+       }
+       if(cards.length>0){
+        document.getElementById('light').style.display='block';
+        document.getElementById('fade').style.display='block';
+       }
+       localStorage.setItem("cards",JSON.stringify(cards));
+    
+    });
+    $(document).on('click','#plusBtn',(function(event){
+        var parentId= String($(event.target).parent().attr('id'));
+        if(parentId=="plusBtn"){
+        parentId= String($(event.target).parent().parent().attr('id'));
+        }
+           number=parseInt($("#"+parentId+"3").html());
+           $("#"+parentId+"3").html(number+1);
+             calculate();
+            }));
+
+        $(document).on('click','#minusBtn',(function(event){
+        var parentId= String($(event.target).parent().attr('id'));
+        if(parentId=="minusBtn"){
+        parentId= String($(event.target).parent().parent().attr('id'));
+        }
+           number=parseInt($("#"+parentId+"3").html());
+           if(number>0){
+           $("#"+parentId+"3").html(number-1);
+           calculate();
+           }
+
+            }));
+
+   const calculate = () => {
+       var totall=0;
+       for (var index = 1; index < 8; index++) {
+           totall +=parseInt($("#a"+index+3).html()) * parseInt($("#a"+index+1).html());   
+       }
+       $("#totall").html(totall+" &#8362");
+       
+   }
+    </script>
+
 </head>
 <body>
     <div class="container">
@@ -13,89 +124,93 @@
         </div>
         <div class="topLine2"></div>
         <div class="oneType">
-            <div class="oneTitle">
-                כרטיס רגיל
-            </div>
-            <div class="onePrice" id="a1">20 &#8362</div>
-            <div class="plusMinus">
-                <div class="oneItem plus" id="a11"><img src="cut/plus.png" /></div>
-                <div class="oneNumber" id="a13">3</div>
-                <div class="oneItem minus" id="a12"><img src="cut/minus.png" /></div>
+            <div id="text1" class="oneTitle">כרטיס רגיל</div>
+            <div class="onePrice" id="a11">20 &#8362</div>
+            <div id="a1" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn"><img src="cut/plus.png" /></div>
+                <div class="oneNumber" id="a13">0</div>
+                <div class="oneItem minus" id="minusBtn"><img src="cut/minus.png" /></div>
             </div>
         </div>
         <div class="oneType">
-            <div class="oneTitle">
+            <div id="text2" class="oneTitle">
                 כרטיס מוזל
             </div>
-            <div class="onePrice" id="a2">10 &#8362</div>
-            <div class="plusMinus">
-                <div class="oneItem plus" id="a21"><img src="cut/plus.png" /></div>
-                <div class="oneNumber" id="a23">3</div>
-                <div class="oneItem minus" id="a22"><img src="cut/minus.png" /></div>
+            <div class="onePrice" id="a21">10 &#8362</div>
+            <div id="a2" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn"><img src="cut/plus.png" /></div>
+                <div class="oneNumber" id="a23">0</div>
+                <div class="oneItem minus" id="minusBtn"><img src="cut/minus.png" /></div>
             </div>
         </div>
         <div class="oneType">
-            <div class="oneTitle">
+            <div id="text3" class="oneTitle">
                 כרטיס ללא תשלום
             </div>
-            <div class="onePrice" id="a3">0 &#8362</div>
-            <div class="plusMinus">
-                <div class="oneItem plus" id="a31"><img src="cut/plus.png" /></div>
-                <div class="oneNumber" id="a33">3</div>
-                <div class="oneItem minus" id="a32"><img src="cut/minus.png" /></div>
+            <div class="onePrice" id="a31">0 &#8362</div>
+            <div id="a3" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn"><img src="cut/plus.png" /></div>
+                <div class="oneNumber" id="a33">0</div>
+                <div class="oneItem minus" id="minusBtn"><img src="cut/minus.png" /></div>
             </div>
         </div>
         <div class="oneType">
-            <div class="oneTitle">
-                כרטיס כניסה לאירוע א
+            <div  id="text4" class="oneTitle">
             </div>
-            <div class="onePrice" id="a4">10 &#8362</div>
-            <div class="plusMinus">
-                <div class="oneItem plus" id="a41"><img src="cut/plus.png" /></div>
-                <div class="oneNumber" id="a43">3</div>
-                <div class="oneItem minus" id="a42"><img src="cut/minus.png" /></div>
-            </div>
-        </div>
-        <div class="oneType">
-            <div class="oneTitle">
-                רכישת קטלוג א
-            </div>
-            <div class="onePrice" id="a5">20 &#8362</div>
-            <div class="plusMinus">
-                <div class="oneItem plus" id="a51"><img src="cut/plus.png" /></div>
-                <div class="oneNumber" id="a53"></div>
-                <div class="oneItem minus" id="a52"><img src="cut/minus.png" /></div>
+            <div class="onePrice" id="a41">10 &#8362</div>
+            <div id="a4" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn"><img src="cut/plus.png" /></div>
+                <div class="oneNumber" id="a43">0</div>
+                <div class="oneItem minus" id="minusBtn"><img src="cut/minus.png" /></div>
             </div>
         </div>
         <div class="oneType">
-            <div class="oneTitle">
-                רכישת קטלוג ב
+            <div  id="text5" class="oneTitle">
+                
             </div>
-            <div class="onePrice" id="a6">10 &#8362</div>
-            <div class="plusMinus">
-                <div class="oneItem plus" id="a61"><img src="cut/plus.png" /></div>
-                <div class="oneNumber" id="a63"></div>
-                <div class="oneItem minus" id="a62"><img src="cut/minus.png" /></div>
+            <div class="onePrice" id="a51">20 &#8362</div>
+            <div id="a5" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn"><img src="cut/plus.png" /></div>
+                <div class="oneNumber" id="a53">0</div>
+                <div class="oneItem minus" id="minusBtn"><img src="cut/minus.png" /></div>
             </div>
         </div>
         <div class="oneType">
-            <div class="oneTitle">
-                רכישת קטלוג ג
+            <div id="text6" class="oneTitle">
             </div>
-            <div class="onePrice" id="a7">10 &#8362</div>
-            <div class="plusMinus">
-                <div class="oneItem plus" id="a71"><img src="cut/plus.png" /></div>
-                <div class="oneNumber" id="a73"></div>
-                <div class="oneItem minus" id="a72"><img src="cut/minus.png" /></div>
+            <div class="onePrice" id="a61">10 &#8362</div>
+            <div id="a6" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn"><img src="cut/plus.png" /></div>
+                <div class="oneNumber" id="a63">0</div>
+                <div class="oneItem minus" id="minusBtn"><img src="cut/minus.png" /></div>
+            </div>
+        </div>
+        <div class="oneType">
+            <div id="text7" class="oneTitle">
+            </div>
+            <div class="onePrice" id="a71">10 &#8362</div>
+            <div id="a7" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn"><img src="cut/plus.png" /></div>
+                <div class="oneNumber" id="a73">0</div>
+                <div class="oneItem minus" id="minusBtn"><img src="cut/minus.png" /></div>
             </div>
         </div>
         <div style="float:right;width:100%;height:56px;background-color:#000000;-webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);-moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);padding:9px;box-sizing:border-box;font-size:24px;color:black;margin-bottom:12px;color:white">
             <div style="float:right;box-sizing:border-box;padding-right:20px">סה"כ</div>
-            <div class="onePrice">120 &#8362</div>
+            <div id="totall" class="onePrice"> 120 &#8362</div>
         </div>
-        <div style="float:left;width:27%;height:56px;background-color:#ce0000;-webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);-moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);padding:9px;box-sizing:border-box;font-size:24px;color:white;margin-top:24px;margin-bottom:12px;text-align:center;cursor:pointer;font-family:OpenSansHebrew-Bold">
+        <div  id="payment" style="float:left;width:27%;height:56px;background-color:#ce0000;-webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);-moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);padding:9px;box-sizing:border-box;font-size:24px;color:white;margin-top:24px;margin-bottom:12px;text-align:center;cursor:pointer;font-family:OpenSansHebrew-Bold">
             לתשלום
         </div>
     </div>
+            <!--    \\\\\\\\\\\\\\\\\\\\\\\\\\\     start  popUp html     \\\\\\\\\\    -->
+            <div id="light" class="popUpwhite_content">
+                <div  class="titlePopUP" > סה"כ לתשלום </div>
+                <div class="subtitlePopUP">התשלום דרך כרטיס אשראי או מזומן</div>
+                <div id="number" class="numPopUP">  </div>
+
+            </div>
+            <div id="fade" class="popUpblack_overlay"></div>
+          <!--    \\\\\\\\\\\\\\\\\\\\\\\\\\\    end popUp html     \\\\\\\\\\    -->
 </body>
 </html>
