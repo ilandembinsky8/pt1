@@ -7,6 +7,7 @@
     <script src="js/functionEvents.js"></script>
     <script src="js/kioskprinterApi.js"></script>
     <script src="js/paylinkAPI.js"></script>
+    <script src="js/CaspitApi.js"></script>
 
 
     <script>
@@ -41,6 +42,7 @@ setInterval(function(){
                 success: function (cash) {
                     $("#number").html(parseFloat($("#totall").html())-cash);
                     getRemainder(parseFloat($("#totall").html()),cash);
+                    startCaspit(parseFloat($("#totall").html())-cash);
                     /*$("#number").html(parseFloat($("#totall").html())-cash);
                     if(parseInt($('#number').html())<0){
                         document.getElementById('light').style.display='none';
@@ -55,11 +57,11 @@ setInterval(function(){
                  
         
 });   
-},1000);
+},2000);
     });
     $(document).on('click','#payment',function(){
-       
-        startPaylink();
+        startCaspit("200")
+        
         var cards = [];
       //  $("#number").html($("#totall").html());
         for (var index = 1; index < 8; index++) {
