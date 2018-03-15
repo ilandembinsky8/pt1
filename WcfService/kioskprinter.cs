@@ -131,7 +131,7 @@ namespace WcfService
                 posPtr.TransactionPrint(ESCPOSConst.CMP_TP_TRANSACTION);
 
                 // Print Text
-                posPtr.PrintBitmap(@"C:\Users\Ahmad Mnasra\Documents\Project\pt1\cut\logo.PNG",
+                posPtr.PrintBitmap(@"C:\kiosk\cut\logo.PNG",
                      ESCPOSConst.CMP_BM_ASIS,
                      ESCPOSConst.CMP_ALIGNMENT_CENTER,
                      ESCPOSConst.CMP_BM_MODE_HT_DITHER | ESCPOSConst.CMP_BM_MODE_CMD_RASTER);
