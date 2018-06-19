@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webserviceRambam", "webserviceRambam.csproj", "{6AC42CDF-E942-4D2C-8AA2-64179C7768B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webserviceOPT", "webserviceOPT.csproj", "{6AC42CDF-E942-4D2C-8AA2-64179C7768B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,7 +21,6 @@ Global
 		{6AC42CDF-E942-4D2C-8AA2-64179C7768B4}.Release|x64.Build.0 = Release|x64
 		{6AC42CDF-E942-4D2C-8AA2-64179C7768B4}.Release|x86.ActiveCfg = Release|x86
 		{6AC42CDF-E942-4D2C-8AA2-64179C7768B4}.Release|x86.Build.0 = Release|x86
-		{6AC42CDF-E942-4D2C-8AA2-64179C7768B4}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

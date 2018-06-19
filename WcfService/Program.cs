@@ -17,7 +17,7 @@ namespace WcfService
     using System;
     using System.ServiceModel.Web;
 
-    class Program
+    class Program3
     {
       
         static void Main(string[] args)
@@ -29,8 +29,12 @@ namespace WcfService
                 //This is the magic line!
               //  serviceHost.Opening += new EventHandler(host_Opening);
                 serviceHost.Open();
-                 Console.WriteLine("WCF REST JSON service is running...");
-                 Console.ReadLine();
+                 Console.WriteLine("WCF REST JSON service pt 1.1.5 is running...");
+                Console.WriteLine("cut full - printer 17/06/2018");
+                Console.WriteLine("USB 001  - printer 17/06/2018");
+
+
+                Console.ReadLine();
 
                  serviceHost.Close();
              }

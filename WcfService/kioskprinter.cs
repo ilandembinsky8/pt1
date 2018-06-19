@@ -12,7 +12,7 @@ namespace WcfService
     class kioskprinter
     {
         ESCPOSPrinter posPtr;
-
+        public static int flag = 0; 
         List<roomOrder> iList;
 
         // Count
@@ -38,12 +38,12 @@ namespace WcfService
             if (ESCPOSConst.CMP_SUCCESS == result)
             {
                 // Connect Success
-                 Console.WriteLine("----------------Connect() : Success Citizen_POS_sample2 ");
+                 Console.WriteLine("Connect() : Success Citizen_POS_sample2 ");
             }
             else
             {
                 // Connect Error
-                Console.WriteLine("------------------Connect() Error : " + result.ToString()+ "Citizen_POS_sample2");
+                Console.WriteLine("Connect() Error : " + result.ToString()+  " Citizen_POS_sample2");
             }
         }
 
@@ -52,14 +52,16 @@ namespace WcfService
             int result;
             String msg = "";
 
-            
+
+            connect(ESCPOSConst.CMP_PORT_USB, "USB001");
 
             // Printer Check
             result = posPtr.PrinterCheck();
             if (ESCPOSConst.CMP_SUCCESS != result)
             {
-                Console.WriteLine("PrinterCheck() Error : " + result.ToString()+ "Citizen_POS_sample2");
-                connect(ESCPOSConst.CMP_PORT_COM, "COM7:");
+                Console.WriteLine("PrinterCheck() Error : " + result.ToString()+ "with port USB001");
+                connect(ESCPOSConst.CMP_PORT_USB, "USB001");
+
                 //return;
             }
 
@@ -67,13 +69,12 @@ namespace WcfService
             result = posPtr.Status();
             if (ESCPOSConst.CMP_STS_NORMAL != result)
             {
-                Console.WriteLine("Status Error : " + result.ToString()+ "Citizen_POS_sample2");
+                Console.WriteLine("Status Error : " + result.ToString()+ " with port USB001");
                 return;
             }
 
             // Character set
             result = posPtr.SetEncoding("Windows-1255");	// Latin-1
-            //result = posPtr.SetEncoding( "Shift_JIS" );	// Japanese 日本語を印字する場合は、この行を有効にしてください.
             if (ESCPOSConst.CMP_SUCCESS != result)
             {
                 Console.WriteLine("SetEncoding() Error : " + result.ToString()+ "Citizen_POS_sample2");
@@ -97,18 +98,16 @@ namespace WcfService
                 double Total = 0;
                 const double TAX_RATE = 0.08;
 
-                int wordcount1 = 7;
-                int wordcount2 = 14;
+                int wordcount1 = 5;
+                int wordcount2 = 17;
                 int wordcount3 = 3;
                 int wordcount4 = 8;
-                int wordcount5 = 9;
                 int wordcount6 = 7;
 
-                wordcount1 = 6;
-                wordcount2 = 40;
-                wordcount3 = 4;
+                wordcount1 = 8;
+                wordcount2 = 45;
+                wordcount3 = 7;
                 wordcount4 = 12;
-                wordcount5 = 14;
                 wordcount6 = 10;
 
 
@@ -122,6 +121,21 @@ namespace WcfService
                     return;
                 }
 
+                if(flag == 0)
+                {
+                    flag = 1;
+                    result = posPtr.CutPaper(ESCPOSConst.CMP_CUT_FULL_PREFEED);
+                    // Print Text
+                    posPtr.PrintBitmap(@"C:\kiosk\cut\logo.PNG",
+                         ESCPOSConst.CMP_BM_ASIS,
+                         ESCPOSConst.CMP_ALIGNMENT_CENTER,
+                         ESCPOSConst.CMP_BM_MODE_HT_DITHER | ESCPOSConst.CMP_BM_MODE_CMD_RASTER);
+                    posPtr.PrintNormal("\n\n");
+
+                    posPtr.PrintText(Reverse("תודה רבה"),
+                         ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD,
+                         ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT);
+                }
                 // Acquire the date and time
                 DateTime dat = DateTime.Now;
                 string strDATE = dat.ToString("yyyy-MM-dd HH:mm:ss");
@@ -130,15 +144,7 @@ namespace WcfService
                 // Start Transaction ( Batch )
                 posPtr.TransactionPrint(ESCPOSConst.CMP_TP_TRANSACTION);
 
-                // Print Text
-                posPtr.PrintBitmap(@"C:\kiosk\cut\logo.PNG",
-                     ESCPOSConst.CMP_BM_ASIS,
-                     ESCPOSConst.CMP_ALIGNMENT_CENTER,
-                     ESCPOSConst.CMP_BM_MODE_HT_DITHER | ESCPOSConst.CMP_BM_MODE_CMD_RASTER);
 
-                posPtr.PrintText(Reverse("תודה רבה"),
-                     ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD,
-                     ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT);
 
                 posPtr.PrintText("\n" + strDATE + "\n\n",
                      ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT,
@@ -146,9 +152,9 @@ namespace WcfService
 
                 foreach (var order in iList)
                 {
-                    posPtr.PrintPaddingText(order.Price.ToString("0.00"), ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH, wordcount1, ESCPOSConst.CMP_SIDE_LEFT);
-                    posPtr.PrintPaddingText(order.Count.ToString("0"), ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH, wordcount3, ESCPOSConst.CMP_SIDE_LEFT);
-                    posPtr.PrintPaddingText(Reverse(order.Name.ToString()), ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH, wordcount2, ESCPOSConst.CMP_SIDE_LEFT);
+                    posPtr.PrintPaddingText(order.Price.ToString("0.00"), ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH, wordcount1, ESCPOSConst.CMP_SIDE_RIGHT);
+                    posPtr.PrintPaddingText(order.Count.ToString("0"), ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH, wordcount3, ESCPOSConst.CMP_SIDE_RIGHT);
+                    posPtr.PrintPaddingText(Reverse(order.Name.ToString()), ESCPOSConst.CMP_FNT_DEFAULT, ESCPOSConst.CMP_TXT_1WIDTH, wordcount2, ESCPOSConst.CMP_SIDE_RIGHT);
 
                     amount = order.Price;
 
@@ -199,7 +205,18 @@ namespace WcfService
                      ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT);
 
                 // After feed the paper to the cutting position, partial cut.
-                result = posPtr.CutPaper(ESCPOSConst.CMP_CUT_PARTIAL_PREFEED);
+                result = posPtr.CutPaper(ESCPOSConst.CMP_CUT_FULL_PREFEED);
+                posPtr.PrintNormal("\n");
+                // Print Text
+                posPtr.PrintBitmap(@"C:\kiosk\cut\logo.PNG",
+                     ESCPOSConst.CMP_BM_ASIS,
+                     ESCPOSConst.CMP_ALIGNMENT_CENTER,
+                     ESCPOSConst.CMP_BM_MODE_HT_DITHER | ESCPOSConst.CMP_BM_MODE_CMD_RASTER);
+                posPtr.PrintNormal("\n\n");
+
+                posPtr.PrintText(Reverse("תודה רבה"),
+                     ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD,
+                     ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT);
 
                 if (ESCPOSConst.CMP_SUCCESS != result)
                 {
@@ -216,7 +233,7 @@ namespace WcfService
                 }
 
                 // Connect Success
-                Console.WriteLine("Print : Success"+ "Citizen_POS_sample2");
+                Console.WriteLine("Print : Success"+ " PT ");
             }
             catch
             {

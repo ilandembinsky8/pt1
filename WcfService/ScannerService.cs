@@ -26,15 +26,30 @@ namespace WcfService
     
            public string startCaspit(string price)
         {
-            Process p = new Process();
-            p.StartInfo.FileName = @"C:\kiosk\caspit\caspit.exe";
-            p.StartInfo.Arguments = price;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.UseShellExecute = true;
+            string result = "";
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = @"C:\kiosk\caspit\caspit.exe",
+                    Arguments = price,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            };
+
             p.Start();
-            p.WaitForExit();
-  
-            return "true";
+            while (!p.StandardOutput.EndOfStream)
+            {
+                string line = p.StandardOutput.ReadLine();
+                result += line;
+                // do something with line
+            }
+            p.Close();
+
+
+            return result;
         }
 
         public string getCash()
@@ -44,6 +59,17 @@ namespace WcfService
                
             return PayLink.getinstance().readValue();
 
+        }
+        public string startSdkPaylink()
+        {
+            PayLink.getinstance().startPaylink();
+            return "true";
+        }
+        public string finishSdkPaylink()
+        {
+            PayLink.getinstance().EndPaylink();
+            PayLink.setInstance();
+            return "true";
         }
         public string getRemainder(string value)
         {

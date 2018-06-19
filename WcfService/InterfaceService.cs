@@ -27,12 +27,23 @@ namespace WcfService
           UriTemplate = "getcash/",
           BodyStyle = WebMessageBodyStyle.WrappedRequest,
           ResponseFormat = WebMessageFormat.Json)]
-        string getCash();
+          string getCash();
+
+        [OperationContract]
+        [WebGet(UriTemplate = "startSdkPaylink/",
+        ResponseFormat = WebMessageFormat.Json)]
+        string startSdkPaylink();
+
+        [OperationContract]
+        [WebGet(UriTemplate = "finishSdkPaylink/",
+        ResponseFormat = WebMessageFormat.Json)]
+        string finishSdkPaylink();
 
         [OperationContract]
         [WebGet(UriTemplate = "getRemainder/?val={value}",
     ResponseFormat = WebMessageFormat.Json)]
         string getRemainder(string value);
+
 
    
         [OperationContract]

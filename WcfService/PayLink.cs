@@ -39,7 +39,7 @@ namespace WcfService
             }
             else
             {
-                mhe.Enabled = true;
+                
 
                 // remember present current values
                 TotalAccepted = mhe.CurrentValue;
@@ -71,7 +71,14 @@ namespace WcfService
              //   UpdateEventControls();
 
         }
-    
+        public void startPaylink()
+        {
+            mhe.Enabled = true;
+        }
+        public void EndPaylink()
+        {
+            mhe.Enabled = false;
+        }
         public string readValue()
         {
             return String.Format("{0:0.00}", ((decimal)mhe.CurrentValue - this.TotalAccepted) / 100);

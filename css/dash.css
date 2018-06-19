@@ -95,7 +95,7 @@ body {
 
 .plusMinus {
     float: left;
-    width: 12%;
+    width: 30%;
 }
 
 .oneItem {
@@ -137,10 +137,10 @@ body {
 .popUpwhite_content {
   display: none;
   position: absolute;
-  top: 35%;
+  top: 25%;
   left: 35%;
   width: 35%;
-  height: 35%;
+  height: 40%;
   padding: 16px;
   border: 5px black solid ;
   background-color: #e5e5e5;
@@ -164,4 +164,7 @@ body {
     font-size: 4em;
     padding: 15px 15px 15px 15px;
     text-align: center;
+}
+.hidden {
+    display: none;
 }

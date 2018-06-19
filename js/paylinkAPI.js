@@ -1,3 +1,22 @@
+function returnCashAfterCancel(cash){
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost/exampleService/getRemainder/?val='+cash,
+        async: false,
+        success: function (data) {
+            console.log(data);
+            finishPaylink();
+            
+            $('#light').html('<div  id="titlepop" style="padding-top:50px;color:red;" class="titlePopUP" > העסקה בוטלה ! </div>')
+            setTimeout(() => {
+                location.href='index.html'
+            }, 5000);
+            //document.getElementById('light').style.display='none';
+            //document.getElementById('fade').style.display='none';
+        },
+        dataType: 'json'
+    });
+}
 function getCash(){
     $.ajax({
         type: 'POST',
@@ -14,15 +33,22 @@ function getRemainder(totall,cash){
     var remain=parseFloat(cash)-parseFloat(totall);
     var cards=JSON.parse(localStorage.getItem("cards"));
     
-    if(remain>=0 && cards.length !=0 && totall!=0){
+    if(remain>0 && cards.length>0 && totall> 0){
     $.ajax({
         type: 'GET',
         url: 'http://localhost/exampleService/getRemainder/?val='+remain,
+        async: false,
         success: function (data) {
             console.log(data);
             
-            printorders(localStorage.getItem("cards"));
+            if(localStorage.getItem("cards") != null){
+                printorders(localStorage.getItem("cards"));
+                localStorage.removeItem("cards");
+    
+            }
+            
             $('#light').html('<div  id="titlepop" style="padding-top:50px;color:green;" class="titlePopUP" > התשלום בוצע בהצלחה </div>')
+            finishPaylink();
             setTimeout(() => {
                 location.href='index.html'
             }, 5000);
@@ -31,14 +57,19 @@ function getRemainder(totall,cash){
         },
         dataType: 'json'
     });
-    }//if
-    if(cards.length !=0 && totall==0){
-        printorders(localStorage.getItem("cards"));
+    }else //if
+    if(cards.length !=0 && remain==0){
+        if(localStorage.getItem("cards") != null){
+            printorders(localStorage.getItem("cards"));
+            localStorage.removeItem("cards");
+
+        }
         cards=[];
-        localStorage.setItem("cards",null);
+       // localStorage.setItem("cards",null);
         $('#light').html('<div  id="titlepop" style="padding-top:50px;color:green;" class="titlePopUP" > התשלום בוצע בהצלחה </div>')
         setTimeout(() => {
             location.href='index.html'
+            finishPaylink();
         }, 2000);   
      }
 
@@ -46,7 +77,19 @@ function getRemainder(totall,cash){
 function startPaylink(){
     $.ajax({
         type: 'GET',
-        url: 'http://localhost/exampleService/startPaylink/',
+        async: false,
+        url: 'http://localhost/exampleService/startSdkPaylink/',
+        success: function (data) {
+            console.log(data);
+        },
+        dataType: 'json'
+    }); 
+}
+function finishPaylink(){
+    $.ajax({
+        type: 'GET',
+        async: false,
+        url: 'http://localhost/exampleService/finishSdkPaylink/',
         success: function (data) {
             console.log(data);
         },
