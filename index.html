@@ -111,7 +111,7 @@
                     document.getElementById('fade').style.display = 'block';
                     localStorage.setItem("cards", JSON.stringify(cards));
                     printorders(localStorage.getItem("cards"));
-                    addtransaction("ללא תשלום","0");
+                    addtransaction("מזומן","0");
                 $('#light').html('<div  id="titlepop" style="padding-top:50px;color:green;" class="titlePopUP" >  ללא תשלום </div>')
                 setTimeout(() => {
                     location.href = 'index.html'

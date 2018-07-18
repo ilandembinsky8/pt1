@@ -13,6 +13,7 @@
 //limitations under the License.
 namespace WcfService
 {
+    using System;
     using System.Runtime.Serialization;
     using System.ServiceModel;
     using System.ServiceModel.Web;
@@ -25,6 +26,17 @@ namespace WcfService
         [WebGet(UriTemplate = "addtransaction/{type}/{totall}",
         ResponseFormat = WebMessageFormat.Json)]
         string addtransaction(string type, string totall);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "SelectTran/{from}/{to}",
+        ResponseFormat = WebMessageFormat.Json)]
+        string SelectTran(string from, string to);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "GroupTran/{from}/{to}",
+        ResponseFormat = WebMessageFormat.Json)]
+        string GroupTran(string from, string to);
+
 
         [OperationContract]
         [WebInvoke(Method = "POST",

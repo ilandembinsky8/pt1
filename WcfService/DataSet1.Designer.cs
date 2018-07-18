@@ -285,7 +285,7 @@ namespace WcfService {
             
             private global::System.Data.DataColumn columntype;
             
-            private global::System.Data.DataColumn columntotall;
+            private global::System.Data.DataColumn columntotal;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
@@ -346,9 +346,9 @@ namespace WcfService {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn totallColumn {
+            public global::System.Data.DataColumn totalColumn {
                 get {
-                    return this.columntotall;
+                    return this.columntotal;
                 }
             }
             
@@ -389,13 +389,13 @@ namespace WcfService {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public transactionRow AddtransactionRow(System.DateTime date, string type, string totall) {
+            public transactionRow AddtransactionRow(System.DateTime date, string type, decimal total) {
                 transactionRow rowtransactionRow = ((transactionRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         date,
                         type,
-                        totall};
+                        total};
                 rowtransactionRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowtransactionRow);
                 return rowtransactionRow;
@@ -428,7 +428,7 @@ namespace WcfService {
                 this.columninvoiceNo = base.Columns["invoiceNo"];
                 this.columndate = base.Columns["date"];
                 this.columntype = base.Columns["type"];
-                this.columntotall = base.Columns["totall"];
+                this.columntotal = base.Columns["total"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -440,8 +440,8 @@ namespace WcfService {
                 base.Columns.Add(this.columndate);
                 this.columntype = new global::System.Data.DataColumn("type", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columntype);
-                this.columntotall = new global::System.Data.DataColumn("totall", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columntotall);
+                this.columntotal = new global::System.Data.DataColumn("total", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columntotal);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columninvoiceNo}, true));
                 this.columninvoiceNo.AutoIncrement = true;
@@ -451,7 +451,6 @@ namespace WcfService {
                 this.columninvoiceNo.ReadOnly = true;
                 this.columninvoiceNo.Unique = true;
                 this.columntype.MaxLength = 10;
-                this.columntotall.MaxLength = 10;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -637,17 +636,17 @@ namespace WcfService {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string totall {
+            public decimal total {
                 get {
                     try {
-                        return ((string)(this[this.tabletransaction.totallColumn]));
+                        return ((decimal)(this[this.tabletransaction.totalColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'totall\' in table \'transaction\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'total\' in table \'transaction\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletransaction.totallColumn] = value;
+                    this[this.tabletransaction.totalColumn] = value;
                 }
             }
             
@@ -677,14 +676,14 @@ namespace WcfService {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IstotallNull() {
-                return this.IsNull(this.tabletransaction.totallColumn);
+            public bool IstotalNull() {
+                return this.IsNull(this.tabletransaction.totalColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SettotallNull() {
-                this[this.tabletransaction.totallColumn] = global::System.Convert.DBNull;
+            public void SettotalNull() {
+                this[this.tabletransaction.totalColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -850,43 +849,43 @@ namespace WcfService.DataSet1TableAdapters {
             tableMapping.ColumnMappings.Add("invoiceNo", "invoiceNo");
             tableMapping.ColumnMappings.Add("date", "date");
             tableMapping.ColumnMappings.Add("type", "type");
-            tableMapping.ColumnMappings.Add("totall", "totall");
+            tableMapping.ColumnMappings.Add("total", "total");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [transaction] WHERE (([invoiceNo] = @Original_invoiceNo) AND ((@IsNull_date = 1 AND [date] IS NULL) OR ([date] = @Original_date)) AND ((@IsNull_type = 1 AND [type] IS NULL) OR ([type] = @Original_type)) AND ((@IsNull_totall = 1 AND [totall] IS NULL) OR ([totall] = @Original_totall)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [transaction] WHERE (([invoiceNo] = @Original_invoiceNo) AND ((@IsNull_date = 1 AND [date] IS NULL) OR ([date] = @Original_date)) AND ((@IsNull_type = 1 AND [type] IS NULL) OR ([type] = @Original_type)) AND ((@IsNull_total = 1 AND [total] IS NULL) OR ([total] = @Original_total)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_invoiceNo", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "invoiceNo", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_date", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_date", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_type", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_type", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_totall", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "totall", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_totall", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "totall", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_total", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "total", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_total", global::System.Data.SqlDbType.Decimal, 0, global::System.Data.ParameterDirection.Input, 18, 2, "total", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [transaction] ([date], [type], [totall]) VALUES (@date, @type, @total" +
-                "l);\r\nSELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = " +
-                "SCOPE_IDENTITY())";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [transaction] ([date], [type], [total]) VALUES (@date, @type, @total)" +
+                ";\r\nSELECT invoiceNo, date, type, total FROM [transaction] WHERE (invoiceNo = SCO" +
+                "PE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@date", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@type", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@totall", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "totall", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@total", global::System.Data.SqlDbType.Decimal, 0, global::System.Data.ParameterDirection.Input, 18, 2, "total", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [transaction] SET [date] = @date, [type] = @type, [totall] = @totall WHERE (([invoiceNo] = @Original_invoiceNo) AND ((@IsNull_date = 1 AND [date] IS NULL) OR ([date] = @Original_date)) AND ((@IsNull_type = 1 AND [type] IS NULL) OR ([type] = @Original_type)) AND ((@IsNull_totall = 1 AND [totall] IS NULL) OR ([totall] = @Original_totall)));
-SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invoiceNo)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [transaction] SET [date] = @date, [type] = @type, [total] = @total WHERE (([invoiceNo] = @Original_invoiceNo) AND ((@IsNull_date = 1 AND [date] IS NULL) OR ([date] = @Original_date)) AND ((@IsNull_type = 1 AND [type] IS NULL) OR ([type] = @Original_type)) AND ((@IsNull_total = 1 AND [total] IS NULL) OR ([total] = @Original_total)));
+SELECT invoiceNo, date, type, total FROM [transaction] WHERE (invoiceNo = @invoiceNo)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@date", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@type", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@totall", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "totall", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@total", global::System.Data.SqlDbType.Decimal, 0, global::System.Data.ParameterDirection.Input, 18, 2, "total", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_invoiceNo", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "invoiceNo", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_date", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_date", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_type", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_type", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_totall", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "totall", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_totall", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "totall", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_total", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "total", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_total", global::System.Data.SqlDbType.Decimal, 0, global::System.Data.ParameterDirection.Input, 18, 2, "total", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@invoiceNo", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "invoiceNo", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
@@ -907,13 +906,13 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = "INSERT INTO [transaction] ([date], [type], [totall]) VALUES (@date, @type, @total" +
-                "l);\r\nSELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = " +
-                "SCOPE_IDENTITY())";
+            this._commandCollection[1].CommandText = "INSERT INTO [transaction] ([date], [type], [total]) VALUES (@date, @type, @total)" +
+                ";\r\nSELECT invoiceNo, date, type, total FROM [transaction] WHERE (invoiceNo = SCO" +
+                "PE_IDENTITY())";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@date", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@type", global::System.Data.SqlDbType.NChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@totall", global::System.Data.SqlDbType.NChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, "totall", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@total", global::System.Data.SqlDbType.Decimal, 9, global::System.Data.ParameterDirection.Input, 18, 2, "total", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -973,7 +972,7 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int Original_invoiceNo, global::System.Nullable<global::System.DateTime> Original_date, string Original_type, string Original_totall) {
+        public virtual int Delete(int Original_invoiceNo, global::System.Nullable<global::System.DateTime> Original_date, string Original_type, global::System.Nullable<decimal> Original_total) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_invoiceNo));
             if ((Original_date.HasValue == true)) {
                 this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(0));
@@ -991,13 +990,13 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
                 this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
                 this.Adapter.DeleteCommand.Parameters[4].Value = ((string)(Original_type));
             }
-            if ((Original_totall == null)) {
-                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[6].Value = global::System.DBNull.Value;
+            if ((Original_total.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[6].Value = ((decimal)(Original_total.Value));
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[6].Value = ((string)(Original_totall));
+                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[6].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -1019,7 +1018,7 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(global::System.Nullable<global::System.DateTime> date, string type, string totall) {
+        public virtual int Insert(global::System.Nullable<global::System.DateTime> date, string type, global::System.Nullable<decimal> total) {
             if ((date.HasValue == true)) {
                 this.Adapter.InsertCommand.Parameters[0].Value = ((System.DateTime)(date.Value));
             }
@@ -1032,11 +1031,11 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
             else {
                 this.Adapter.InsertCommand.Parameters[1].Value = ((string)(type));
             }
-            if ((totall == null)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
+            if ((total.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((decimal)(total.Value));
             }
             else {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((string)(totall));
+                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -1058,7 +1057,7 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(global::System.Nullable<global::System.DateTime> date, string type, string totall, int Original_invoiceNo, global::System.Nullable<global::System.DateTime> Original_date, string Original_type, string Original_totall, int invoiceNo) {
+        public virtual int Update(global::System.Nullable<global::System.DateTime> date, string type, global::System.Nullable<decimal> total, int Original_invoiceNo, global::System.Nullable<global::System.DateTime> Original_date, string Original_type, global::System.Nullable<decimal> Original_total, int invoiceNo) {
             if ((date.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[0].Value = ((System.DateTime)(date.Value));
             }
@@ -1071,11 +1070,11 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
             else {
                 this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(type));
             }
-            if ((totall == null)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
+            if ((total.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((decimal)(total.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((string)(totall));
+                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
             this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(Original_invoiceNo));
             if ((Original_date.HasValue == true)) {
@@ -1094,13 +1093,13 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
                 this.Adapter.UpdateCommand.Parameters[6].Value = ((object)(0));
                 this.Adapter.UpdateCommand.Parameters[7].Value = ((string)(Original_type));
             }
-            if ((Original_totall == null)) {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
+            if ((Original_total.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((decimal)(Original_total.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[9].Value = ((string)(Original_totall));
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
             }
             this.Adapter.UpdateCommand.Parameters[10].Value = ((int)(invoiceNo));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
@@ -1123,15 +1122,15 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(global::System.Nullable<global::System.DateTime> date, string type, string totall, int Original_invoiceNo, global::System.Nullable<global::System.DateTime> Original_date, string Original_type, string Original_totall) {
-            return this.Update(date, type, totall, Original_invoiceNo, Original_date, Original_type, Original_totall, Original_invoiceNo);
+        public virtual int Update(global::System.Nullable<global::System.DateTime> date, string type, global::System.Nullable<decimal> total, int Original_invoiceNo, global::System.Nullable<global::System.DateTime> Original_date, string Original_type, global::System.Nullable<decimal> Original_total) {
+            return this.Update(date, type, total, Original_invoiceNo, Original_date, Original_type, Original_total, Original_invoiceNo);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, false)]
-        public virtual int InsertQuery(global::System.Nullable<global::System.DateTime> date, string type, string totall) {
+        public virtual int InsertQuery(global::System.Nullable<global::System.DateTime> date, string type, global::System.Nullable<decimal> total) {
             global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[1];
             if ((date.HasValue == true)) {
                 command.Parameters[0].Value = ((System.DateTime)(date.Value));
@@ -1145,11 +1144,11 @@ SELECT invoiceNo, date, type, totall FROM [transaction] WHERE (invoiceNo = @invo
             else {
                 command.Parameters[1].Value = ((string)(type));
             }
-            if ((totall == null)) {
-                command.Parameters[2].Value = global::System.DBNull.Value;
+            if ((total.HasValue == true)) {
+                command.Parameters[2].Value = ((decimal)(total.Value));
             }
             else {
-                command.Parameters[2].Value = ((string)(totall));
+                command.Parameters[2].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
             if (((command.Connection.State & global::System.Data.ConnectionState.Open) 

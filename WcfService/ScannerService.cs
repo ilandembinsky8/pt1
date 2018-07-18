@@ -17,6 +17,8 @@ namespace WcfService
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.Data;
+    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Xml.Linq;
 
@@ -25,11 +27,59 @@ namespace WcfService
         private DataSet1TableAdapters.transactionTableAdapter report = new DataSet1TableAdapters.transactionTableAdapter();
 
 
-        public string addtransaction(string type, string totall)
+        public string addtransaction(string type, string total)
         {
-            int repsonse = report.InsertQuery(DateTime.Now, type, totall);
+            int repsonse = report.InsertQuery(DateTime.Now, type, Convert.ToDecimal(total));
             Console.WriteLine("type ", type); 
             return repsonse + "  insert to database";
+        }
+         public string GroupTran(string from, string to)
+        {
+            string s = "";
+            
+            DataSet ds = new DataSet("TimeRanges");
+            using (SqlConnection conn = new SqlConnection(@"Data Source=AHMAD-NAWAF\SQLEXPRESS;Initial Catalog=betaTekvah;Integrated Security=True"))
+            {
+                SqlCommand sqlComm = new SqlCommand("proc_GroupTransactionByDate", conn);
+                sqlComm.Parameters.AddWithValue("@FromDate", from);
+                sqlComm.Parameters.AddWithValue("@ToDate", to);
+                sqlComm.Parameters.AddWithValue("@IsForCsv", 0);
+
+                sqlComm.CommandType = CommandType.StoredProcedure;
+
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = sqlComm;
+
+                da.Fill(ds);
+            }
+
+
+            return JsonConvert.SerializeObject(ds);
+
+        }
+
+        public string SelectTran(string from, string to)
+        {
+            string s = "";
+
+            DataSet ds = new DataSet("TimeRanges");
+            using (SqlConnection conn = new SqlConnection(@"Data Source=AHMAD-NAWAF\SQLEXPRESS;Initial Catalog=betaTekvah;Integrated Security=True"))
+            {
+                SqlCommand sqlComm = new SqlCommand("proc_SelectTransaction", conn);
+                sqlComm.Parameters.AddWithValue("@FromDate", from);
+                sqlComm.Parameters.AddWithValue("@ToDate", to);
+                sqlComm.Parameters.AddWithValue("@IsForCsv", 0);
+                sqlComm.CommandType = CommandType.StoredProcedure;
+
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = sqlComm;
+
+                da.Fill(ds);
+            }
+
+
+            return JsonConvert.SerializeObject(ds);
+
         }
 
         public string startCaspit(string price)
