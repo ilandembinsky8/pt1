@@ -21,6 +21,10 @@ namespace WcfService
     [ServiceContract]
     public interface InterfaceService
     {
+        [OperationContract]
+        [WebGet(UriTemplate = "addtransaction/{type}/{totall}",
+        ResponseFormat = WebMessageFormat.Json)]
+        string addtransaction(string type, string totall);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

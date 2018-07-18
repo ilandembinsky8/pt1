@@ -43,6 +43,7 @@ function getRemainder(totall,cash){
             
             if(localStorage.getItem("cards") != null){
                 printorders(localStorage.getItem("cards"));
+                addtransaction("מזומן",totall);
                 localStorage.removeItem("cards");
     
             }
@@ -61,6 +62,7 @@ function getRemainder(totall,cash){
     if(cards.length !=0 && remain==0){
         if(localStorage.getItem("cards") != null){
             printorders(localStorage.getItem("cards"));
+            addtransaction("מזומן",totall);
             localStorage.removeItem("cards");
 
         }

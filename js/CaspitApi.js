@@ -9,6 +9,8 @@ function startCaspit(price) {
             console.log($xml.find("AshStatus"));
             if (parseInt($xml.find("AshStatus")) == 0) {
                 printorders(localStorage.getItem("cards"));
+                addtransaction("אשראי",price);
+
                 $('#light').html('<div  id="titlepop" style="padding-top:50px;color:green;" class="titlePopUP" > התשלום בוצע בהצלחה </div>')
                 setTimeout(() => {
                     location.href = 'index.html'

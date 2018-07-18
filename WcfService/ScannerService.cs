@@ -22,9 +22,17 @@ namespace WcfService
 
     public class ScannerService : InterfaceService
     {
+        private DataSet1TableAdapters.transactionTableAdapter report = new DataSet1TableAdapters.transactionTableAdapter();
 
-    
-           public string startCaspit(string price)
+
+        public string addtransaction(string type, string totall)
+        {
+            int repsonse = report.InsertQuery(DateTime.Now, type, totall);
+            Console.WriteLine("type ", type); 
+            return repsonse + "  insert to database";
+        }
+
+        public string startCaspit(string price)
         {
             string result = "";
             var p = new Process
@@ -52,6 +60,7 @@ namespace WcfService
             return result;
         }
 
+
         public string getCash()
         {
 
@@ -65,6 +74,7 @@ namespace WcfService
             PayLink.getinstance().startPaylink();
             return "true";
         }
+        
         public string finishSdkPaylink()
         {
             PayLink.getinstance().EndPaylink();

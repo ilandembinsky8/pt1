@@ -31,7 +31,9 @@ namespace WcfService
                 serviceHost.Open();
                  Console.WriteLine("WCF REST JSON service pt 1.1.5 is running...");
                 Console.WriteLine("cut full - printer 17/06/2018");
-                Console.WriteLine("USB 001  - printer 17/06/2018");
+                Console.WriteLine("USB 001  - printer 17/06//2018");
+                Console.WriteLine("sqlexpress  - sql 18/07/2018");
+
 
 
                 Console.ReadLine();
