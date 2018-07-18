@@ -1,0 +1,87 @@
+USE [betaTekvah]
+GO
+/****** Object:  StoredProcedure [dbo].[proc_GroupTransactionByDate]    Script Date: 19/07/2018 01:25:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[proc_GroupTransactionByDate](@FromDate datetime=NULL,
+											@ToDate datetime=NULL,
+											@IsForCsv bit=1)as
+begin
+
+ SET NOCOUNT on
+
+if (@FromDate is null and @ToDate is null)
+begin
+set @FromDate= cast(getdate() as date);
+set @ToDate=cast(cast (getdate() as date) as datetime) + cast( '23:59:59.000' as datetime);
+end
+
+
+DECLARE @retTable TABLE (TranDate Date,Total_Count int,Total_Amount decimal(18,2),Total_Visa int,Total_Visa_Amount decimal(18,2),Total_Cash int,Total_Cash_Amount decimal(18,2))
+declare @v_diff_between_days int =DATEDIFF(DAY,@FromDate,@ToDate);
+declare @v_current_date datetime=@FromDate;
+declare @v_Total_Count int=0;
+declare @v_Total_Visa int=0;
+declare @v_Total_Cash int=0;
+declare @v_total_Amount decimal(18,2)=0;
+declare @v_total_Visa_Amount decimal(18,2)=0;
+declare @v_total_Cash_Amount decimal(18,2)=0;
+
+while @v_diff_between_days>=0
+begin
+     
+set @v_Total_Count =0;
+set @v_Total_Visa =0;
+set @v_Total_Cash =0;
+set @v_total_Amount =0;
+set @v_total_Visa_Amount =0;
+set @v_total_Cash_Amount =0;
+
+select @v_Total_Count=count(*),@v_total_Amount=sum([total])
+from [transaction]
+where cast([date] as date)=cast(@v_current_date as date)
+group by cast([date] as date)
+
+
+select @v_Total_Visa=count(*),@v_total_Visa_Amount=sum([total])
+from [transaction]
+where cast([date] as date)=cast(@v_current_date as date) and [type] like N'מזומן     '
+group by cast([date] as date)
+
+
+select @v_Total_Cash=count(*),@v_total_Cash_Amount=sum([total])
+from [transaction]
+where cast([date] as date)=cast(@v_current_date as date) and [type] like N'אשראי     '
+group by cast([date] as date)
+
+
+insert into @retTable
+values(@v_current_date,@v_Total_Count,@v_total_Amount,@v_Total_Visa,@v_total_Visa_Amount,@v_Total_Cash,@v_total_Cash_Amount)
+
+
+set @v_current_date=DateAdd(day,1,@v_current_date);
+set @v_diff_between_days=@v_diff_between_days-1;
+
+end
+
+if(@IsForCsv=1)
+	begin
+	        select N'תאריך',N'עסקאות',N'סכום',N'עסקאות אשראי',N'סכום',N'עסקאות מזומן',N'סכום'
+			
+
+	        SELECT * 
+			FROM @retTable
+	end
+else
+	begin
+			SELECT * 
+			FROM @retTable
+	end
+
+
+
+
+
+end
