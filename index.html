@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html style="height:100%">
 
 <head>
@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/dash.css">
     <script src="js/lib/jquery.min.js"></script>
+    <script src="js/sqlfunction.js"></script>
     <script src="js/functionEvents.js"></script>
     <script src="js/kioskprinterApi.js"></script>
     <script src="js/paylinkAPI.js"></script>
@@ -16,6 +17,7 @@
         $(document).ready(function () {
             var cards = [];
             localStorage.setItem("cards", JSON.stringify(cards));
+
 
             setTimeout(() => {
                 location.href = 'index.html'
@@ -109,6 +111,7 @@
                     document.getElementById('fade').style.display = 'block';
                     localStorage.setItem("cards", JSON.stringify(cards));
                     printorders(localStorage.getItem("cards"));
+                    addtransaction("ללא תשלום","0");
                 $('#light').html('<div  id="titlepop" style="padding-top:50px;color:green;" class="titlePopUP" >  ללא תשלום </div>')
                 setTimeout(() => {
                     location.href = 'index.html'
