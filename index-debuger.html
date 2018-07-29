@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html>
+<html style="height:100%">
+
+<head>
+    <title>פתח תקווה</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/dash.css">
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/sqlfunction.js"></script>
+    <script src="js/functionEvents.js"></script>
+    <script src="js/kioskprinterApi.js"></script>
+    <script src="js/paylinkAPI.js"></script>
+    <script src="js/CaspitApi.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            var cards = [];
+            localStorage.setItem("cards", JSON.stringify(cards));
+
+
+            setTimeout(() => {
+                location.href = 'index.html'
+                finishPaylink();
+            }, 250000);
+            $.getJSON('data/data.json', function (response) {
+
+                $("#text1").html("כרטיס רגיל");
+                $("#text2").html("כרטיס מוזל");
+                $("#text3").html("כרטיס ללא תשלום");
+                $("#text4").html(response.event.eventName);
+                $("#text5").html(response.catalogs[0].catalogName);
+                $("#text6").html(response.catalogs[1].catalogName);
+                $("#text7").html(response.catalogs[2].catalogName);
+                $("#a41").html(response.event.price + " &#8362");
+                $("#a51").html(response.catalogs[0].price + " &#8362");
+                $("#a61").html(response.catalogs[1].price + " &#8362");
+                $("#a71").html(response.catalogs[2].price + " &#8362");
+
+
+            });
+            calculate();
+            $(document).on('click', '#caspit', function () {
+                startCaspit(parseFloat($("#totall").html())*100);
+                afterClickCashCaspit("אשראי");
+
+            });
+            $(document).on('click', '#cashBtnCancel', function () {
+                $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost/exampleService/getcash/',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        // data: myObject,                
+                        success: function (cash) {
+                            returnCashAfterCancel(cash);
+                        }
+                    });
+            });
+            
+
+            $(document).on('click', '#cash', function () {
+                $("#cashBtnCancel").removeClass("hidden");
+                startPaylink();
+                setInterval(function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost/exampleService/getcash/',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        // data: myObject,                
+                        success: function (cash) {
+                            localStorage.setItem("cash",cash);
+                           if( parseFloat($("#totall").html()) -  cash == 0){
+                                    clearInterval(this)
+                                }
+                            $("#number").html(parseFloat($("#totall").html()) -
+                                cash);
+                            getRemainder(parseFloat($("#totall").html()), cash);
+                        }
+
+
+                    });
+                }, 2000);
+                afterClickCashCaspit("מזומן")
+
+            });
+            $(document).on('click', '#payment', function () {
+
+                var cards = [];
+                for (var index = 1; index < 8; index++) {
+                    totall += parseInt($("#a" + index + 3).html()) * parseFloat($("#a" + index + 1).html());
+                    if (parseInt($("#a" + index + 3).html()) != 0) {
+                        var card = {
+                            "name": $("#text" + index).html(),
+                            "count": parseInt($("#a" + index + 3).html()),
+                            "price": parseFloat($("#a" + index + 1).html())
+                        };
+                        cards.push(card);
+                    }
+
+                }
+                console.log(cards);                
+                
+                if (cards.length == 0) {
+                    return;
+                }
+                totall= parseFloat($("#totall").html());
+				addtransaction("מזומן",totall);
+				addtransaction("אשראי",totall);
+
+
+                if (cards.length > 0 && totall == 0 ){
+                    document.getElementById('light').style.display = 'block';
+                    document.getElementById('fade').style.display = 'block';
+                    localStorage.setItem("cards", JSON.stringify(cards));
+                    printorders(localStorage.getItem("cards"));
+                    addtransaction("ללא תשלום","0");
+                $('#light').html('<div  id="titlepop" style="padding-top:50px;color:green;" class="titlePopUP" >  ללא תשלום </div>')
+                setTimeout(() => {
+                    location.href = 'index.html'
+                }, 5000);
+
+                }
+
+                $(".titlePopUP").append($("#totall").html());
+
+                if (cards.length > 0 && totall > 0) {
+                    document.getElementById('light').style.display = 'block';
+                    document.getElementById('fade').style.display = 'block';
+                }
+                localStorage.setItem("cards", JSON.stringify(cards));
+
+                /////debug
+            });
+
+        });
+        $(document).on('click', '#plusBtn', (function (event) {
+            var parentId = String($(event.target).parent().attr('id'));
+            if (parentId == "plusBtn") {
+                parentId = String($(event.target).parent().parent().attr('id'));
+            }
+            number = parseInt($("#" + parentId + "3").html());
+            $("#" + parentId + "3").html(number + 1);
+            calculate();
+        }));
+        
+
+        $(document).on('click', '#minusBtn', (function (event) {
+            var parentId = String($(event.target).parent().attr('id'));
+            if (parentId == "minusBtn") {
+                parentId = String($(event.target).parent().parent().attr('id'));
+            }
+            number = parseInt($("#" + parentId + "3").html());
+            if (number > 0) {
+                $("#" + parentId + "3").html(number - 1);
+                calculate();
+            }
+
+        }));
+
+        const calculate = () => {
+            var totall = 0;
+            for (var index = 1; index < 8; index++) {
+                totall += parseInt($("#a" + index + 3).html()) * parseInt($("#a" + index + 1).html());
+            }
+            $("#totall").html(totall + " &#8362");
+
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="topLine"></div>
+        <div class="logoArea">
+            <div class="logoLeft">
+                <img src="cut/logo.png" />
+            </div>
+            <div class="logoRight">
+                <img src="cut/title.png" />
+            </div>
+        </div>
+        <div class="topLine2"></div>
+        <div class="oneType">
+            <div id="text1" class="oneTitle">כרטיס רגיל</div>
+            <div class="onePrice" id="a11">20 &#8362</div>
+            <div id="a1" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn">
+                    <img src="cut/plus.png" />
+                </div>
+                <div class="oneNumber" id="a13">0</div>
+                <div class="oneItem minus" id="minusBtn">
+                    <img src="cut/minus.png" />
+                </div>
+            </div>
+        </div>
+        <div class="oneType">
+            <div id="text2" class="oneTitle">
+                כרטיס מוזל
+            </div>
+            <div class="onePrice" id="a21">10 &#8362</div>
+            <div id="a2" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn">
+                    <img src="cut/plus.png" />
+                </div>
+                <div class="oneNumber" id="a23">0</div>
+                <div class="oneItem minus" id="minusBtn">
+                    <img src="cut/minus.png" />
+                </div>
+            </div>
+        </div>
+        <div class="oneType">
+            <div id="text3" class="oneTitle">
+                כרטיס ללא תשלום
+            </div>
+            <div class="onePrice" id="a31">0 &#8362</div>
+            <div id="a3" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn">
+                    <img src="cut/plus.png" />
+                </div>
+                <div class="oneNumber" id="a33">0</div>
+                <div class="oneItem minus" id="minusBtn">
+                    <img src="cut/minus.png" />
+                </div>
+            </div>
+        </div>
+        <div class="oneType">
+            <div id="text4" class="oneTitle">
+            </div>
+            <div class="onePrice" id="a41">10 &#8362</div>
+            <div id="a4" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn">
+                    <img src="cut/plus.png" />
+                </div>
+                <div class="oneNumber" id="a43">0</div>
+                <div class="oneItem minus" id="minusBtn">
+                    <img src="cut/minus.png" />
+                </div>
+            </div>
+        </div>
+        <div class="oneType">
+            <div id="text5" class="oneTitle">
+
+            </div>
+            <div class="onePrice" id="a51">20 &#8362</div>
+            <div id="a5" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn">
+                    <img src="cut/plus.png" />
+                </div>
+                <div class="oneNumber" id="a53">0</div>
+                <div class="oneItem minus" id="minusBtn">
+                    <img src="cut/minus.png" />
+                </div>
+            </div>
+        </div>
+        <div class="oneType">
+            <div id="text6" class="oneTitle">
+            </div>
+            <div class="onePrice" id="a61">10 &#8362</div>
+            <div id="a6" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn">
+                    <img src="cut/plus.png" />
+                </div>
+                <div class="oneNumber" id="a63">0</div>
+                <div class="oneItem minus" id="minusBtn">
+                    <img src="cut/minus.png" />
+                </div>
+            </div>
+        </div>
+        <div class="oneType">
+            <div id="text7" class="oneTitle">
+            </div>
+            <div class="onePrice" id="a71">10 &#8362</div>
+            <div id="a7" class="plusMinus">
+                <div class="oneItem plus" id="plusBtn">
+                    <img src="cut/plus.png" />
+                </div>
+                <div class="oneNumber" id="a73">0</div>
+                <div class="oneItem minus" id="minusBtn">
+                    <img src="cut/minus.png" />
+                </div>
+            </div>
+        </div>
+        <div style="float:right;width:100%;height:56px;background-color:#000000;-webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);-moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);padding:9px;box-sizing:border-box;font-size:24px;color:black;margin-bottom:12px;color:white">
+            <div style="float:right;box-sizing:border-box;padding-right:20px">סה"כ</div>
+            <div id="totall" class="onePrice"> 120 &#8362</div>
+        </div>
+        <div id="payment" style="float:left;width:27%;height:56px;background-color:#ce0000;-webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);-moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);padding:9px;box-sizing:border-box;font-size:24px;color:white;margin-top:24px;margin-bottom:12px;text-align:center;cursor:pointer;font-family:OpenSansHebrew-Bold">
+            לתשלום
+        </div>
+    </div>
+    <!--    \\\\\\\\\\\\\\\\\\\\\\\\\\\     start  popUp html     \\\\\\\\\\    -->
+    <div id="light" class="popUpwhite_content">
+        <div class="titlePopUP"> סה"כ לתשלום: </div>
+        <div class="subtitlePopUP">אמצעי תשלום</div>
+
+        <div style="width: 70%;margin:0 auto">
+            <div id="caspit" style="margin:0 auto; width:60%;height:70px;background-color:green;-webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);-moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);padding:9px;box-sizing:border-box;font-size:24px;color:white;margin-top:24px;margin-bottom:12px;text-align:center;cursor:pointer;font-family:OpenSansHebrew-Bold">
+                אשראי
+            </div>
+        </div>
+        <div style="width: 70%;margin:0 auto">
+
+            <div id="cash" style="margin:0 auto;width:60%;height:70px;background-color:green;-webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);-moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);padding:9px;box-sizing:border-box;font-size:24px;color:white;margin-top:24px;margin-bottom:12px;text-align:center;cursor:pointer;font-family:OpenSansHebrew-Bold">
+                מזומן
+            </div>
+        </div>
+        <div id="number" class="numPopUP hidden"> </div>
+        <div id="cashBtnCancel" class="hidden" style="width: 70%;margin:0 auto">
+                <div id="cash" style="margin:0 auto;width:60%;height:70px;background-color:red;-webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);-moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.3);padding:9px;box-sizing:border-box;font-size:24px;color:white;margin-top:24px;margin-bottom:12px;text-align:center;cursor:pointer;font-family:OpenSansHebrew-Bold">
+                        ביטול 
+                </div>
+             </div>
+
+
+    </div>
+    <div id="fade" class="popUpblack_overlay"></div>
+    <!--    \\\\\\\\\\\\\\\\\\\\\\\\\\\    end popUp html     \\\\\\\\\\    -->
+</body>
+<script>
+    function afterClickCashCaspit(type){
+        $(".titlePopUP").html('סה"כ לתשלום:')
+        $(".subtitlePopUP").html(type);
+        $("#cash").addClass("hidden");
+        $("#caspit").addClass("hidden");
+        $("#number").html("&#8362");
+        $("#number").append(parseFloat($("#totall").html()));
+        $("#number").removeClass("hidden")
+        
+    }
+</script>
+</html>

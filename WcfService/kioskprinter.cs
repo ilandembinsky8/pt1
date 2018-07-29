@@ -47,11 +47,10 @@ namespace WcfService
             }
         }
 
-          public void print()
+          public void print(string InvoiceNum)
         {
             int result;
             String msg = "";
-
 
             connect(ESCPOSConst.CMP_PORT_USB, "USB001");
 
@@ -132,10 +131,9 @@ namespace WcfService
                          ESCPOSConst.CMP_BM_MODE_HT_DITHER | ESCPOSConst.CMP_BM_MODE_CMD_RASTER);
                     posPtr.PrintNormal("\n\n");
 
-                    posPtr.PrintText(Reverse("תודה רבה"),
-                         ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD,
-                         ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT);
-                }
+                posPtr.PrintText("\n " + InvoiceNum+" " + Reverse("מס' קבלה:") + "\n",
+            ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD,
+             ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT);
                 // Acquire the date and time
                 DateTime dat = DateTime.Now;
                 string strDATE = dat.ToString("yyyy-MM-dd HH:mm:ss");
@@ -144,11 +142,13 @@ namespace WcfService
                 // Start Transaction ( Batch )
                 posPtr.TransactionPrint(ESCPOSConst.CMP_TP_TRANSACTION);
 
-
-
                 posPtr.PrintText("\n" + strDATE + "\n\n",
                      ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_DEFAULT,
                      ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT);
+                posPtr.PrintText(Reverse("תודה רבה"),
+                 ESCPOSConst.CMP_ALIGNMENT_CENTER, ESCPOSConst.CMP_FNT_BOLD,
+                 ESCPOSConst.CMP_TXT_1WIDTH | ESCPOSConst.CMP_TXT_1HEIGHT);
+                }
 
                 foreach (var order in iList)
                 {

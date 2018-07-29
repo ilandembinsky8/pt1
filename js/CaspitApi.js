@@ -8,8 +8,8 @@ function startCaspit(price) {
             var $xml = $(data)
             console.log($xml.find("AshStatus"));
             if (parseInt($xml.find("AshStatus")) == 0) {
-                printorders(localStorage.getItem("cards"));
                 addtransaction("אשראי",price);
+                printorders(localStorage.getItem("cards"),localStorage.getItem("InvoiceNo"));
 
                 $('#light').html('<div  id="titlepop" style="padding-top:50px;color:green;" class="titlePopUP" > התשלום בוצע בהצלחה </div>')
                 setTimeout(() => {

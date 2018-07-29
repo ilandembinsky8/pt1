@@ -30,8 +30,15 @@ namespace WcfService
         public string addtransaction(string type, string total)
         {
             int repsonse = report.InsertQuery(DateTime.Now, type, Convert.ToDecimal(total));
-            Console.WriteLine("type ", type); 
-            return repsonse + "  insert to database";
+            if (repsonse == 1)
+            {
+
+           
+            return JsonConvert.SerializeObject(report.GetInvoiceNo());
+            }else
+            {
+                return "error";
+            }
         }
          public string GroupTran(string from, string to)
         {
@@ -141,8 +148,10 @@ namespace WcfService
             return "true";
 
         }
-        public string PrintOrder(string input)
+        public string PrintOrder(string input, string number)
         {
+            Console.WriteLine("InvoiceNum is :  " + number);
+
             List<roomOrder> rooms = new List<roomOrder>();
             JArray items = JArray.Parse(input);
 
@@ -160,7 +169,7 @@ namespace WcfService
             Console.WriteLine("------------");
             
             kioskprinter printer = new kioskprinter(rooms);
-            printer.print();
+            printer.print(number);
 
             return "true";
             }

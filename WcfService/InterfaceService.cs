@@ -74,7 +74,7 @@ namespace WcfService
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json)]
-        string PrintOrder(string input);
+        string PrintOrder(string input, string number);
 
 
     }

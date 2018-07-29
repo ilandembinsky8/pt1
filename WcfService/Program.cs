@@ -29,10 +29,9 @@ namespace WcfService
                 //This is the magic line!
               //  serviceHost.Opening += new EventHandler(host_Opening);
                 serviceHost.Open();
-                 Console.WriteLine("WCF REST JSON service pt 1.1.5 is running...");
-                Console.WriteLine("cut full - printer 17/06/2018");
-                Console.WriteLine("USB 001  - printer 17/06//2018");
-                Console.WriteLine("sqlexpress  - sql 18/07/2018");
+                 Console.WriteLine("WCF REST JSON service pt 1.1.7 is running...");
+                Console.WriteLine("sqlexpress  - sql 19/07/2018");
+
 
 
 

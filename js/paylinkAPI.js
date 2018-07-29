@@ -42,8 +42,8 @@ function getRemainder(totall,cash){
             console.log(data);
             
             if(localStorage.getItem("cards") != null){
-                printorders(localStorage.getItem("cards"));
                 addtransaction("מזומן",totall);
+                printorders(localStorage.getItem("cards"),localStorage.getItem("InvoiceNo"));
                 localStorage.removeItem("cards");
     
             }
@@ -61,8 +61,8 @@ function getRemainder(totall,cash){
     }else //if
     if(cards.length !=0 && remain==0){
         if(localStorage.getItem("cards") != null){
-            printorders(localStorage.getItem("cards"));
             addtransaction("מזומן",totall);
+            printorders(localStorage.getItem("cards"),localStorage.getItem("InvoiceNo"));
             localStorage.removeItem("cards");
 
         }

@@ -899,20 +899,25 @@ SELECT invoiceNo, date, type, total FROM [transaction] WHERE (invoiceNo = @invoi
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[3];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT [transaction].*\r\nFROM     [transaction]";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = "INSERT INTO [transaction] ([date], [type], [total]) VALUES (@date, @type, @total)" +
+            this._commandCollection[1].CommandText = "SELECT TOP 1 [invoiceNo]\r\n      ,[date]\r\n      ,[type]\r\n      ,[total]\r\n  FROM [b" +
+                "etaTekvah].[dbo].[transaction]\r\n   ORDER BY [invoiceNo] DESC;";
+            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[2].Connection = this.Connection;
+            this._commandCollection[2].CommandText = "INSERT INTO [transaction] ([date], [type], [total]) VALUES (@date, @type, @total)" +
                 ";\r\nSELECT invoiceNo, date, type, total FROM [transaction] WHERE (invoiceNo = SCO" +
                 "PE_IDENTITY())";
-            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
-            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@date", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@type", global::System.Data.SqlDbType.NChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@total", global::System.Data.SqlDbType.Decimal, 9, global::System.Data.ParameterDirection.Input, 18, 2, "total", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@date", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "date", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@type", global::System.Data.SqlDbType.NChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, "type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@total", global::System.Data.SqlDbType.Decimal, 9, global::System.Data.ParameterDirection.Input, 18, 2, "total", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -934,6 +939,17 @@ SELECT invoiceNo, date, type, total FROM [transaction] WHERE (invoiceNo = @invoi
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
         public virtual DataSet1.transactionDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
+            DataSet1.transactionDataTable dataTable = new DataSet1.transactionDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual DataSet1.transactionDataTable GetInvoiceNo() {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
             DataSet1.transactionDataTable dataTable = new DataSet1.transactionDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
@@ -1131,7 +1147,7 @@ SELECT invoiceNo, date, type, total FROM [transaction] WHERE (invoiceNo = @invoi
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, false)]
         public virtual int InsertQuery(global::System.Nullable<global::System.DateTime> date, string type, global::System.Nullable<decimal> total) {
-            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[1];
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[2];
             if ((date.HasValue == true)) {
                 command.Parameters[0].Value = ((System.DateTime)(date.Value));
             }

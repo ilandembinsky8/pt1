@@ -1,0 +1,176 @@
+<html>
+
+<head>
+    <title>Table Data Addition</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dash.css">
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="js/DownloadCSV.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+    <script>
+        var $table = $('#table');
+
+        $(function () {
+           if (localStorage.getItem("isLogin")== null) {
+               location.href="login.html"
+           }
+
+            var date = new Date();
+
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+
+            var today = year + "-" + month + "-" + day;
+            $("input[name=bday1]").attr("value", today);
+            $("input[name=bday2]").attr("value", today);
+
+                selecttransaction(today, today + " 23:59:59")
+
+        });
+        $().ready(function () {
+            $("#summary").on("click", function () {
+                var toDate = $('input[name=bday2]').val();
+                var fromDate = $('input[name=bday1]').val();
+
+                grouptransaction(fromDate, toDate + " 23:59:59")
+                //2018-07-18 00:00:00
+                //2018-07-18 23:59:59
+
+            });
+            $("#daily").on("click", function () {
+                var toDate = $('input[name=bday2]').val();
+                var fromDate = $('input[name=bday1]').val();
+
+                selecttransaction(fromDate, toDate + " 23:59:59")
+                //2018-07-18 00:00:00
+                //2018-07-18 23:59:59
+
+            });
+            setTimeout(() => {
+                localStorage.removeItem("isLogin");
+            }, 5000);
+        });
+
+        function dateFormat(value, row, index) {
+            return ""+value.substr(0,10)
+        }
+        function timeFormat(value, row, index) {
+            return ""+value.substr(0,8)
+        }
+
+        function grouptransaction(from, to) {
+            $("#tableArea").html(
+                `
+            <table id="table" class="table table-bordered" data-height="250px;">
+                <thead>
+                    <tr>
+                        <th data-field="TranDate" data-formatter="dateFormat">תאריך</th>
+                        <th data-field="Total_Count">כמות העסקאות</th>
+                        <th data-field="Total_Amount"> סכום כולל </th>
+                        <th data-field="Total_Visa"> כמות העסקאות באשראי</th>
+                        <th data-field="Total_Visa_Amount">סכום </th>
+
+                        <th data-field="Total_Cash">כמות העסקאות במזומן </th>
+                        <th data-field="Total_Cash_Amount"> סכום</th>
+
+                    </tr>
+                </thead>
+            </table>
+            `
+            );
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost/exampleservice/groupTran/' + from + "/" + to,
+                success: function (mydata) {
+                    console.log(JSON.parse(mydata));
+                    jsonData = JSON.parse(mydata)
+                    $('#table').bootstrapTable({
+                        data: jsonData.Table
+                    });
+                localStorage.setItem("dataTable",JSON.stringify(jsonData.Table))
+                },
+                dataType: 'json'
+            });
+        }
+
+        function selecttransaction(from, to) {
+            $("#tableArea").html(
+                `
+            <button type="button" class="btn btn-primary" onclick="download1()">הורד קובץ CSV</button>
+            <table id="table" class="table table-bordered" data-height="250px;">
+                <thead>
+                    <tr>
+                        <th data-field="invoiceNo">מס' עסקה</th>
+                        <th data-field="date" data-formatter="dateFormat"> תאריך עסקה </th>
+                        <th data-field="time" data-formatter="timeFormat">שעה</th>
+                        <th data-field="total"> סכום עסקה </th>
+                        <th data-field="type"> סוג תשלום</th>
+
+                    </tr>
+                </thead>
+            </table>
+            `
+            );
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost/exampleservice/SelectTran/' + from + "/" + to,
+                success: function (mydata) {
+                    console.log(JSON.parse(mydata));
+                    jsonData = JSON.parse(mydata)                    
+                    $('#table').bootstrapTable({
+                        data: jsonData.Table
+                    });
+                    localStorage.setItem("dataTable",JSON.stringify(jsonData.Table))
+                },
+                dataType: 'json'
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container;" style="width: 80%; margin:0 auto">
+        <div class="topLine"></div>
+        <div class="logoArea">
+            <div class="logoLeft">
+                <img src="cut/logo.png" />
+            </div>
+            <div class="logoRight">
+                <img src="cut/title.png" />
+            </div>
+        </div>
+        <div class="logoArea">
+                <div class="row">
+                <div class="col-sm-2" style="margin-top:20px;">
+                    <input id="summary" class="btn btn-success" style="font-size: 19px;" type="submit" value="דוח עסקאות יומי"> </div>
+                <div class="col-sm-2" style="margin-top:20px;">
+                    <input id="daily" class="btn btn-success" style="font-size:  19px;" type="submit" value="פירוט התקבולים"> </div>
+                <div class="col-sm-4" style="margin-top:20px;">עד תאריך
+                    <input type="date" name="bday2">
+                </div>
+
+                <div class="col-sm-4" style="margin-top:20px;">מ- תאריך
+                    <input type="date" name="bday1">
+                </div>
+
+            </div>
+        </div>
+        <div id="tableArea" class="row">
+
+
+
+        </div>
+
+
+
+    </div>
+</body>
+
+</html>

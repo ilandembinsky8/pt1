@@ -110,8 +110,8 @@
                     document.getElementById('light').style.display = 'block';
                     document.getElementById('fade').style.display = 'block';
                     localStorage.setItem("cards", JSON.stringify(cards));
-                    printorders(localStorage.getItem("cards"));
                     addtransaction("מזומן","0");
+                    printorders(localStorage.getItem("cards"),localStorage.getItem("InvoiceNo"));
                 $('#light').html('<div  id="titlepop" style="padding-top:50px;color:green;" class="titlePopUP" >  ללא תשלום </div>')
                 setTimeout(() => {
                     location.href = 'index.html'
@@ -168,9 +168,12 @@
 </head>
 
 <body>
+    
     <div class="container">
         <div class="topLine"></div>
+
         <div class="logoArea">
+
             <div class="logoLeft">
                 <img src="cut/logo.png" />
             </div>
@@ -312,9 +315,14 @@
 
 
     </div>
+    <div class="iconLogin" onclick="location.href='login.html'">
+            <img src="cut/user.png" style="width: 85px;">
+        </div>
     <div id="fade" class="popUpblack_overlay"></div>
     <!--    \\\\\\\\\\\\\\\\\\\\\\\\\\\    end popUp html     \\\\\\\\\\    -->
+
 </body>
+
 <script>
     function afterClickCashCaspit(type){
         $(".titlePopUP").html('סה"כ לתשלום:')
